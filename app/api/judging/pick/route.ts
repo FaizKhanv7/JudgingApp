@@ -1,0 +1,4 @@
+import { NextRequest, NextResponse } from "next/server";
+import { requireJudge } from "@/lib/auth";
+import { db } from "@/lib/supabase";
+export async function POST(request: NextRequest) { const auth = await requireJudge(); if ("error" in auth) return auth.error; const { teamId } = await request.json(); const client = db(); const { data: status } = await client.from("judge_status").select("status").eq("judge_id", auth.judgeId).maybeSingle(); if (status?.status === "finished") return NextResponse.json({ error: "Your judging is locked." }, { status: 403 }); const { error } = await client.from("judge_picks").upsert({ judge_id: auth.judgeId, team_id: teamId }, { onConflict: "judge_id" }); if (error) return NextResponse.json({ error: "Could not save your pick." }, { status: 500 }); await client.from("judge_status").upsert({ judge_id: auth.judgeId, status: "picking", finished_at: null }, { onConflict: "judge_id" }); return NextResponse.json({ ok: true }); }

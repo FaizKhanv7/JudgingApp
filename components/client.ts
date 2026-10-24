@@ -1,0 +1,2 @@
+export async function api(path: string, init?: RequestInit) { const response = await fetch(path, { ...init, headers: { "Content-Type": "application/json", ...(init?.headers || {}) }, cache: "no-store" }); const data = await response.json().catch(() => ({})); if (!response.ok) throw new Error(data.error || "Something went wrong."); return data; }
+export const points = (stars: number, weight: number) => (stars / 5 * weight).toFixed(1).replace(/\.0$/, "");

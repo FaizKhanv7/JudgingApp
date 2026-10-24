@@ -1,0 +1,3 @@
+"use client";
+import { useState } from "react";
+export function Rubric({ baseline, winning }: { baseline: string; winning: string }) { const [open, setOpen] = useState(false); return <div className="mt-3 border-t border-slate-100 pt-2"><button type="button" onClick={() => setOpen(!open)} className="min-h-10 text-sm font-semibold text-slate-600">{open ? "Hide rubric ↑" : "Rubric & scoring guide ↓"}</button>{open && <div className="space-y-3 pb-2 text-sm leading-6 text-slate-600"><p><span className="font-bold text-ink">Baseline: </span>{baseline}</p><p><span className="font-bold text-mint">Winning standard: </span>{winning}</p></div>}</div>; }
